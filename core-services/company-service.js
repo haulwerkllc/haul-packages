@@ -1,4 +1,5 @@
 const { GetCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
+const { InvokeCommand } = require('@aws-sdk/client-lambda');
 
 /**
  * VERY SIMPLE FIELD FILTER
