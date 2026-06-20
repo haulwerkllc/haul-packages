@@ -28,7 +28,9 @@ const BASE_UPDATABLE_FIELDS = [
   ];
   
   const ADMIN_ONLY_FIELDS = [
-    'platform_fee_pct'
+    'platform_fee_pct',
+    'preferred_provider',
+    'veteran_owned',
   ];
   
 function filterCompanyUpdate(actor, payload) {
