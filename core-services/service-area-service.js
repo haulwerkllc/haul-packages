@@ -3,7 +3,7 @@ const { PutCommand, GetCommand, DeleteCommand, UpdateCommand, QueryCommand } = r
 
 const BASE_UPDATABLE_FIELDS = ['name', 'type', 'radius_km', 'geometry', 'active', 'center'];
 
-const ADMIN_ONLY_FIELDS = ['municipality_id'];
+const ADMIN_ONLY_FIELDS = ['municipality_id', 'business_activities'];
 
 function filterServiceAreaUpdate(actor, payload) {
   const allowed = new Set(BASE_UPDATABLE_FIELDS);
@@ -73,6 +73,13 @@ async function createServiceArea(companyId, payload, context) {
 
   if (payload.municipality_id) {
     serviceArea.municipality_id = payload.municipality_id;
+  }
+
+  if (context.actor === 'admin' && payload.is_market === true) {
+    serviceArea.is_market = true;
+    if (Array.isArray(payload.business_activities)) {
+      serviceArea.business_activities = payload.business_activities;
+    }
   }
 
   await dynamodb.send(
