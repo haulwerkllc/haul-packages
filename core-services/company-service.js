@@ -27,10 +27,20 @@ const BASE_UPDATABLE_FIELDS = [
     'business_activities'
   ];
   
+  const VALID_COMPANY_STATUSES = new Set([
+    'ONBOARDING',
+    'INCOMPLETE',
+    'PENDING_REVIEW',
+    'ACTIVE',
+    'SUSPENDED',
+    'CLOSED',
+  ]);
+
   const ADMIN_ONLY_FIELDS = [
     'platform_fee_pct',
     'preferred_provider',
     'veteran_owned',
+    'status',
   ];
   
 function filterCompanyUpdate(actor, payload) {
@@ -146,6 +156,12 @@ async function updateCompany(companyId, payload, context) {
     if (Object.keys(updates).length === 0) {
         const err = new Error('NO_VALID_FIELDS');
         err.code = 'NO_VALID_FIELDS';
+        throw err;
+    }
+
+    if (updates.status !== undefined && !VALID_COMPANY_STATUSES.has(updates.status)) {
+        const err = new Error(`Invalid status. Must be one of: ${[...VALID_COMPANY_STATUSES].join(', ')}`);
+        err.code = 'INVALID_FIELD';
         throw err;
     }
 

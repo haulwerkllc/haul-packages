@@ -1,0 +1,80 @@
+[  
+{
+    "id": "DUMP_TRAILER",
+    "label": "dump_trailer",
+    "value": "Dump Trailer",
+    "capacity_cubic_meters": 11.3
+  },
+  {
+    "id": "PICKUP_OPEN_BED",
+    "label": "pickup_open_bed",
+    "value": "Pickup Truck (Open Bed)",
+    "capacity_cubic_meters": 2.5
+  },
+  {
+    "id": "PICKUP_WITH_TRAILER",
+    "label": "pickup_with_trailer",
+    "value": "Pickup Truck + Trailer",
+    "capacity_cubic_meters": 8.5
+  },
+  {
+    "id": "CARGO_VAN",
+    "label": "cargo_van",
+    "value": "Cargo Van",
+    "capacity_cubic_meters": 11.5
+  },
+  {
+    "id": "CARGO_VAN_EXTENDED",
+    "label": "cargo_van_extended",
+    "value": "Cargo Van (Extended)",
+    "capacity_cubic_meters": 14.5
+  },
+  {
+    "id": "BOX_TRUCK_10_14",
+    "label": "box_truck_10_14",
+    "value": "Box Truck (10–14 ft)",
+    "capacity_cubic_meters": 18
+  },
+  {
+    "id": "BOX_TRUCK_16_20",
+    "label": "box_truck_16_20",
+    "value": "Box Truck (16–20 ft)",
+    "capacity_cubic_meters": 28
+  },
+  {
+    "id": "BOX_TRUCK_24_26",
+    "label": "box_truck_24_26",
+    "value": "Box Truck (24–26 ft)",
+    "capacity_cubic_meters": 43
+  },
+  {
+    "id": "FLATBED_TRUCK",
+    "label": "flatbed_truck",
+    "value": "Flatbed Truck",
+    "capacity_cubic_meters": 15
+  },
+  {
+    "id": "STEP_VAN",
+    "label": "step_van",
+    "value": "Step Van (Bread Truck)",
+    "capacity_cubic_meters": 30
+  },
+  {
+    "id": "SEMI_TRUCK",
+    "label": "semi_truck",
+    "value": "Semi Truck / 18-Wheeler",
+    "capacity_cubic_meters": 85
+  },
+  {
+    "id": "TOW_TRUCK",
+    "label": "tow_truck",
+    "value": "Tow Truck",
+    "capacity_cubic_meters": 0
+  },
+  {
+    "id": "OTHER",
+    "label": "other",
+    "value": "Other",
+    "capacity_cubic_meters": 0
+  }
+]
