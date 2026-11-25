@@ -130,6 +130,7 @@ function isAlreadyRequestedThisTerm({ existingRecord, document, force }) {
  * @param {string} params.companyLegalName
  * @param {string|null} params.producerContactName
  * @param {string|null} params.producerName
+ * @param {string|null} [params.policyNumber]
  * @param {string} params.env - 'dev' | 'stage' | 'main'
  * @param {string|null} [params.footerNote] - appended when the send was rerouted
  * @returns {{ subject: string, text: string, html: string }}
@@ -138,20 +139,21 @@ function buildAdditionalInsuredRequestEmail({
   companyLegalName,
   producerContactName,
   producerName,
+  policyNumber = null,
   env,
   footerNote = null,
 }) {
   const greetingName = producerContactName || producerName || null;
   const greeting = greetingName ? `Hi ${greetingName},` : 'Hi there,';
   const subjectPrefix = env === 'main' ? '' : env === 'stage' ? '[STAGE] ' : '[DEV] ';
-  const subject = `${subjectPrefix}Additional insured request for ${companyLegalName}`;
+  const subject = `${subjectPrefix}Additional insured request${policyNumber ? ` | Policy #${policyNumber}` : ''}`;
 
   const bodyLines = [
     greeting,
     '',
-    `Please send a current general liability certificate for ${companyLegalName} and the policy endorsement covering "${HAULWERK_LEGAL_NAME}" as an additional insured for work booked through Haul.`,
+    `Haul is a platform that connects customers with hauling companies. With ${companyLegalName}\u2019s authorization, we request additional insured status for claims arising from their work booked through Haul.`,
     '',
-    `If a blanket endorsement applies, please send it and confirm it covers ${HAULWERK_LEGAL_NAME}. If an endorsement must be issued, please advise on any fee first.`,
+    `Please send the current COI and endorsement covering ${HAULWERK_LEGAL_NAME} under general liability policy #${policyNumber || 'N/A'}. If blanket coverage applies, please confirm. Please flag any fee first.`,
     '',
     'Thank you,',
     'Haul Support',
@@ -368,6 +370,7 @@ async function requestAdditionalInsured(companyId, options = {}, context) {
     companyLegalName: company.legal_name || company.name || 'the company',
     producerContactName: reviewData.producer_contact_name || null,
     producerName: reviewData.producer_name || null,
+    policyNumber: document.document_number || null,
     env,
     footerNote,
   });
