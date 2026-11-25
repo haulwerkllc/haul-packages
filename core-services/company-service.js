@@ -1,5 +1,6 @@
 const { GetCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
 const { InvokeCommand } = require('@aws-sdk/client-lambda');
+const { VALID_INSURANCE_TIERS } = require('./insurance-tier-service');
 
 /**
  * VERY SIMPLE FIELD FILTER
@@ -42,6 +43,7 @@ const BASE_UPDATABLE_FIELDS = [
     'preferred_provider',
     'veteran_owned',
     'status',
+    'insurance_tier',
   ];
   
 function filterCompanyUpdate(actor, payload) {
@@ -164,6 +166,20 @@ async function updateCompany(companyId, payload, context) {
         const err = new Error(`Invalid status. Must be one of: ${[...VALID_COMPANY_STATUSES].join(', ')}`);
         err.code = 'INVALID_FIELD';
         throw err;
+    }
+
+    if (updates.insurance_tier !== undefined && updates.insurance_tier !== null && !VALID_INSURANCE_TIERS.has(updates.insurance_tier)) {
+        const err = new Error(`Invalid insurance_tier. Must be null or one of: ${[...VALID_INSURANCE_TIERS].join(', ')}`);
+        err.code = 'INVALID_FIELD';
+        throw err;
+    }
+
+    // An admin setting insurance_tier directly is an override of the AI-derived
+    // value — stamp the source and timestamp so the Status tab can show where
+    // the tier came from and when it last changed (most-recent-wins semantics).
+    if (updates.insurance_tier !== undefined) {
+        updates.insurance_tier_source = 'ADMIN';
+        updates.insurance_tier_updated_at = new Date().toISOString();
     }
 
     // Check Google URL change
