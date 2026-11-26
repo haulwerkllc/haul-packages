@@ -479,9 +479,34 @@ async function confirmAdditionalInsured(companyId, params, context) {
     throw err;
   }
 
-  const existing = await loadExistingAdditionalInsuredOrThrow(dynamodb, tables.COMPANY_DOCUMENTS_TABLE_NAME, companyId);
+  const existingResult = await dynamodb.send(
+    new GetCommand({
+      TableName: tables.COMPANY_DOCUMENTS_TABLE_NAME,
+      Key: { pk: `COMPANY#${companyId}`, sk: 'ADDITIONAL_INSURED' },
+    })
+  );
+  let existing = existingResult.Item || null;
 
   const now = new Date().toISOString();
+
+  // Endorsements can arrive without Haul ever sending a request (e.g. the
+  // company forwards it, or never authorized insurer contact).
+  if (!existing) {
+    const document = await getLatestInsuranceDocument(dynamodb, tables.COMPANY_DOCUMENTS_TABLE_NAME, companyId);
+    existing = {
+      pk: `COMPANY#${companyId}`,
+      sk: 'ADDITIONAL_INSURED',
+      company_id: companyId,
+      policy_number: document?.document_number || null,
+      policy_expires_at: document?.expires_at || null,
+      requested_at: null,
+      requested_to_email: null,
+      requested_cc_email: null,
+      request_count: 0,
+      created_at: now,
+    };
+  }
+
   const record = {
     ...existing,
     status: AdditionalInsuredStatus.CONFIRMED,
